@@ -15,7 +15,7 @@ public class AdminResponses {
     private String userId;
     private String adminName;
     private String email;
-    private Integer employeeId;
+    private String employeeId;
     private String phoneNumber;
 
 }

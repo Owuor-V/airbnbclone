@@ -14,7 +14,8 @@ public interface AdminRepository extends JpaRepository<AdminEntity, Long> {
 //    boolean existsByemployeeId(Integer employeeId);
 
     Optional<AdminEntity> findByUserId(String userId);
+
     boolean existsByUserId(String userId);
 
-    boolean existsByEmployeeId(Integer employeeId);
+    boolean existsByEmployeeId(String employeeId);
 }

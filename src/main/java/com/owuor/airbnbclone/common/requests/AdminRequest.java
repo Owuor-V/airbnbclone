@@ -29,7 +29,7 @@ public class AdminRequest {
     private String email;
 
     @NotBlank(message = "Employee Id cannot be null")
-    private Integer employeeId;
+    private String employeeId;
 
     @NotBlank(message = "Phone number cannot be blank")
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
