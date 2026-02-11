@@ -1,4 +1,4 @@
-package com.owuor.airbnbclone.auth.entity;
+package com.owuor.airbnbclone.common.config.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

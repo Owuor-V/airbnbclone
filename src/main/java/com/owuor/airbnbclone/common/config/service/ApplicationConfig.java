@@ -1,4 +1,4 @@
-package com.owuor.airbnbclone.common.config;
+package com.owuor.airbnbclone.common.config.service;
 
 import com.owuor.airbnbclone.auth.entity.AdminEntity;
 import com.owuor.airbnbclone.auth.entity.ClientEntity;

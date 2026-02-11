@@ -1,7 +1,7 @@
 package com.owuor.airbnbclone.auth.service;
 
-import com.owuor.airbnbclone.auth.entity.PasswordPolicy;
-import com.owuor.airbnbclone.auth.repository.PasswordPolicyRepository;
+import com.owuor.airbnbclone.common.config.entity.PasswordPolicy;
+import com.owuor.airbnbclone.common.config.repository.PasswordPolicyRepository;
 import com.owuor.airbnbclone.common.dto.PasswordPolicyDto;
 import com.owuor.airbnbclone.enumlist.PasswordEnum;
 import org.springframework.stereotype.Service;

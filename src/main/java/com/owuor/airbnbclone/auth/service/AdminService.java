@@ -1,15 +1,19 @@
 package com.owuor.airbnbclone.auth.service;
 
 import com.owuor.airbnbclone.auth.entity.AdminEntity;
-import com.owuor.airbnbclone.auth.entity.PasswordPolicy;
-import com.owuor.airbnbclone.auth.entity.TrackAdminLogin;
+import com.owuor.airbnbclone.common.config.entity.PasswordPolicy;
+import com.owuor.airbnbclone.common.config.entity.SessionTimeMgt;
+import com.owuor.airbnbclone.common.config.entity.TrackAdminLogin;
 import com.owuor.airbnbclone.auth.repository.AdminRepository;
-import com.owuor.airbnbclone.auth.repository.TrackAdminLoginRepository;
+import com.owuor.airbnbclone.common.config.repository.SessionTimeMgtRepository;
+import com.owuor.airbnbclone.common.config.repository.TrackAdminLoginRepository;
 import com.owuor.airbnbclone.common.exception.IncorrectPasswordException;
 import com.owuor.airbnbclone.common.requests.AdminRequest;
 import com.owuor.airbnbclone.common.requests.LoginRequest;
 import com.owuor.airbnbclone.common.responses.AdminResponses;
 import com.owuor.airbnbclone.common.responses.AuthResponse;
+import com.owuor.airbnbclone.common.responses.GenerateTokenResponse;
+import com.owuor.airbnbclone.enumlist.SessionFlag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +56,9 @@ public class AdminService {
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private TrackAdminLoginRepository trackAdminLoginRepository;
+    @Autowired
+    private SessionTimeMgtRepository sessionTimeMgtRepository;
+    private static final String adminFlag = "Admin";
 
     public ResponseEntity<AdminResponses> createAdmin(AdminRequest adminRequest) {
 
@@ -132,8 +139,11 @@ public class AdminService {
         recordAdminLogin(adminEntity);
 
         String jti = getAdminRandomUUID();
-        SessionTimeMgt sessionTimeMgt = sessionTimeMgtRepository.findBySessionFlag(SessionFlag.valueOf(adminFlag))
-                .orElseThrow(() -> new SessionException("Session Time not found."));
+
+        Optional<SessionTimeMgt> optSessionTime = sessionTimeMgtRepository.findBySessionFlag(SessionFlag.valueOf(adminFlag));
+        if (optSessionTime.isEmpty()){
+            throw new SessionException("Session Time not found.");
+        }
 
         revokeAllUserTokens(adminEntity);
         GenerateTokenResponse generateTokenResponse =
@@ -166,6 +176,11 @@ public class AdminService {
                 .message(adminEntity.getFirstLogin() ? "First login detected. Please reset your password." : "Success")
                 .data(loginResponse)
                 .build();
+    }
+
+    public String getAdminRandomUUID(){
+        return UUID.randomUUID().toString();
+
     }
 
     private void revokeAllUserTokens (AdminEntity adminEntity){

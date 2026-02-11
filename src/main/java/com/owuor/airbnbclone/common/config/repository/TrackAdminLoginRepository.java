@@ -1,6 +1,6 @@
-package com.owuor.airbnbclone.auth.repository;
+package com.owuor.airbnbclone.common.config.repository;
 
-import com.owuor.airbnbclone.auth.entity.TrackAdminLogin;
+import com.owuor.airbnbclone.common.config.entity.TrackAdminLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
